@@ -11,13 +11,16 @@
 |
 */
 
-Route::group(['prefix' => 'api', 'middleware' => 'auth.api'], function () {
+Route::group(['prefix' => 'api'], function () {
     Route::get('department', 'Api\DepartmentController@getAll')
         ->name('api-department-all');
 
-    Route::get('department/{department_id}', 'Api\DepartmentController@getDepartment')
+    Route::get('department/{department_id}', 'Api\DepartmentController@getDepartments')
         ->name('api-department-get');
 
     Route::get('tree/{tree_id}/{department_id}', 'Api\TreeController@getTreeDepartment')
         ->name('api-tree-get');
 });
+
+Route::any('update-data', 'CronController@updateData')
+    ->name('cron-update-data');
