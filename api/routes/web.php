@@ -22,5 +22,8 @@ Route::group(['prefix' => 'api'], function () {
         ->name('api-tree-get');
 });
 
+Route::get('', 'HomeController@home')
+    ->name('home');
+
 Route::any('update-data', 'CronController@updateData')
     ->name('cron-update-data');
