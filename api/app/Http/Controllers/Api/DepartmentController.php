@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Department;
 use App\Http\Controllers\Controller;
 use App\Risk;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller {
     /**
@@ -22,18 +23,51 @@ class DepartmentController extends Controller {
             $departmentJson = [];
 
             foreach ($departments as $department) {
+                //$risks = Risk::Where('department_id', $department->id)->get();
+                $risk = Risk::find(DB::table('risks')->max('risk'));
+
                 array_push($departmentJson, [
                     'id' => $department->id,
                     'name' => $department->name,
-                    'number' => $department->number
+                    'number' => $department->number,
+                    'risk' => $risk->risk,
+                    'color' => call_user_func(function() use ($risk) {
+                        switch($risk->risk) {
+                            case 0:
+                                return 'white';
+                                break;
+
+                            case 1:
+                                return 'green-1';
+                                break;
+
+                            case 2:
+                                return 'green-2';
+                                break;
+
+                            case 3:
+                                return 'yellow';
+                                break;
+
+                            case 4:
+                                return 'orange';
+                                break;
+
+                            case '5':
+                                return 'red';
+                                break;
+
+                            default:
+                                return 'white';
+                                break;
+                        }
+                    })
                 ]);
             }
 
             return response()->json([
                 'return' => 'OK',
-                'departments' => [
-                    $departmentJson
-                ]
+                'departments' => $departmentJson
             ], 200, $header, JSON_UNESCAPED_UNICODE);
         }
         catch(\Exception $e){
@@ -80,7 +114,7 @@ class DepartmentController extends Controller {
                     ];
                 }
 
-                $riskData[$risk->tree_id]['risk'] += ($risk->risk / count($departments_id));
+                $riskData[$risk->tree_id]['risk'] += round($risk->risk / count($departments_id), 2);
             }
 
             foreach ($riskData as $riskDatum) {
@@ -92,12 +126,8 @@ class DepartmentController extends Controller {
 
             return response()->json([
                 'return' => 'OK',
-                'departments' => [
-                    $departmentJson
-                ],
-                'risks' => [
-                    $riskJson
-                ]
+                'departments' => $departmentJson,
+                'risks' => $riskJson
             ], 200, $header, JSON_UNESCAPED_UNICODE);
         }
         catch(\Exception $e){

@@ -3,14 +3,14 @@ CREATE TABLE departments
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name VARCHAR(32) NOT NULL,
     number VARCHAR(10) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE trees
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name VARCHAR(32) NOT NULL,
     number INT(11) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE risks
 (
@@ -20,163 +20,166 @@ CREATE TABLE risks
     trees_id INT(11) NOT NULL,
     CONSTRAINT risks_departments_id_fk FOREIGN KEY (departments_id) REFERENCES departments (id),
     CONSTRAINT risks_trees_id_fk FOREIGN KEY (trees_id) REFERENCES trees (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE INDEX risks_departments_id_fk ON risks (departments_id);
 CREATE INDEX risks_trees_id_fk ON risks (trees_id);
 
-INSERT INTO pollen.departments (name, number) VALUES ('Ain', '1');
-INSERT INTO pollen.departments (name, number) VALUES ('Aisne', '2');
-INSERT INTO pollen.departments (name, number) VALUES ('Allier', '3');
-INSERT INTO pollen.departments (name, number) VALUES ('Alpes de Haute Provence', '4');
-INSERT INTO pollen.departments (name, number) VALUES ('Hautes-Alpes', '5');
-INSERT INTO pollen.departments (name, number) VALUES ('Alpes-Maritimes', '6');
-INSERT INTO pollen.departments (name, number) VALUES ('Ardèches', '7');
-INSERT INTO pollen.departments (name, number) VALUES ('Ardennes', '8');
-INSERT INTO pollen.departments (name, number) VALUES ('Arièges', '9');
-INSERT INTO pollen.departments (name, number) VALUES ('Aube', '10');
-INSERT INTO pollen.departments (name, number) VALUES ('Aude', '11');
-INSERT INTO pollen.departments (name, number) VALUES ('Aveyron', '12');
-INSERT INTO pollen.departments (name, number) VALUES ('Bouche du Rhône', '13');
-INSERT INTO pollen.departments (name, number) VALUES ('Calvados', '14');
-INSERT INTO pollen.departments (name, number) VALUES ('Cantal', '15');
-INSERT INTO pollen.departments (name, number) VALUES ('Charente', '16');
-INSERT INTO pollen.departments (name, number) VALUES ('Charente Maritime', '17');
-INSERT INTO pollen.departments (name, number) VALUES ('Cher', '18');
-INSERT INTO pollen.departments (name, number) VALUES ('Corrèze', '19');
-INSERT INTO pollen.departments (name, number) VALUES ('Corse', '20');
-INSERT INTO pollen.departments (name, number) VALUES ('Côte d''Or', '21');
-INSERT INTO pollen.departments (name, number) VALUES ('Côte d''Armor', '22');
-INSERT INTO pollen.departments (name, number) VALUES ('Creuse', '23');
-INSERT INTO pollen.departments (name, number) VALUES ('Dordogne', '24');
-INSERT INTO pollen.departments (name, number) VALUES ('Doubs', '25');
-INSERT INTO pollen.departments (name, number) VALUES ('Drôme', '26');
-INSERT INTO pollen.departments (name, number) VALUES ('Eure', '27');
-INSERT INTO pollen.departments (name, number) VALUES ('Eure et Loire', '28');
-INSERT INTO pollen.departments (name, number) VALUES ('Finistère', '29');
-INSERT INTO pollen.departments (name, number) VALUES ('Gard', '30');
-INSERT INTO pollen.departments (name, number) VALUES ('Haute Garonne', '31');
-INSERT INTO pollen.departments (name, number) VALUES ('Gers', '32');
-INSERT INTO pollen.departments (name, number) VALUES ('Gironde', '33');
-INSERT INTO pollen.departments (name, number) VALUES ('Hérault', '34');
-INSERT INTO pollen.departments (name, number) VALUES ('Ille et Vilaine', '35');
-INSERT INTO pollen.departments (name, number) VALUES ('Indre', '36');
-INSERT INTO pollen.departments (name, number) VALUES ('Indre et Loire', '37');
-INSERT INTO pollen.departments (name, number) VALUES ('Isère', '38');
-INSERT INTO pollen.departments (name, number) VALUES ('Jura', '39');
-INSERT INTO pollen.departments (name, number) VALUES ('Landes', '40');
-INSERT INTO pollen.departments (name, number) VALUES ('Loir et Cher', '41');
-INSERT INTO pollen.departments (name, number) VALUES ('Loire', '42');
-INSERT INTO pollen.departments (name, number) VALUES ('Haute Loire', '43');
-INSERT INTO pollen.departments (name, number) VALUES ('Loire Atlantique', '44');
-INSERT INTO pollen.departments (name, number) VALUES ('Loiret', '45');
-INSERT INTO pollen.departments (name, number) VALUES ('Lot', '46');
-INSERT INTO pollen.departments (name, number) VALUES ('Lot et Garonne', '47');
-INSERT INTO pollen.departments (name, number) VALUES ('Lozère', '48');
-INSERT INTO pollen.departments (name, number) VALUES ('Maine et Loire', '49');
-INSERT INTO pollen.departments (name, number) VALUES ('Manche', '50');
-INSERT INTO pollen.departments (name, number) VALUES ('Marne', '51');
-INSERT INTO pollen.departments (name, number) VALUES ('Haute Marne', '52');
-INSERT INTO pollen.departments (name, number) VALUES ('Mayenne', '53');
-INSERT INTO pollen.departments (name, number) VALUES ('Meurthe et Moselle', '54');
-INSERT INTO pollen.departments (name, number) VALUES ('Meuse', '55');
-INSERT INTO pollen.departments (name, number) VALUES ('Morbihan', '56');
-INSERT INTO pollen.departments (name, number) VALUES ('Moselle', '57');
-INSERT INTO pollen.departments (name, number) VALUES ('Nièvre', '58');
-INSERT INTO pollen.departments (name, number) VALUES ('Nord', '59');
-INSERT INTO pollen.departments (name, number) VALUES ('Oise', '60');
-INSERT INTO pollen.departments (name, number) VALUES ('Orne', '61');
-INSERT INTO pollen.departments (name, number) VALUES ('Pas de Calais', '62');
-INSERT INTO pollen.departments (name, number) VALUES ('Puy de Dôme', '63');
-INSERT INTO pollen.departments (name, number) VALUES ('Pyrénées Atlantiques', '64');
-INSERT INTO pollen.departments (name, number) VALUES ('Haute Pyrénées', '65');
-INSERT INTO pollen.departments (name, number) VALUES ('Pyrénées Orientales', '66');
-INSERT INTO pollen.departments (name, number) VALUES ('Bas Rhin', '67');
-INSERT INTO pollen.departments (name, number) VALUES ('Haut Rhin', '68');
-INSERT INTO pollen.departments (name, number) VALUES ('Rhône', '69');
-INSERT INTO pollen.departments (name, number) VALUES ('Haute Saône', '70');
-INSERT INTO pollen.departments (name, number) VALUES ('Saône et Loire', '71');
-INSERT INTO pollen.departments (name, number) VALUES ('Sarthe', '72');
-INSERT INTO pollen.departments (name, number) VALUES ('Savoie', '73');
-INSERT INTO pollen.departments (name, number) VALUES ('Haute Savoie', '74');
-INSERT INTO pollen.departments (name, number) VALUES ('Paris', '75');
-INSERT INTO pollen.departments (name, number) VALUES ('Seine Maritime', '76');
-INSERT INTO pollen.departments (name, number) VALUES ('Seine et Marne', '77');
-INSERT INTO pollen.departments (name, number) VALUES ('Yvelines', '78');
-INSERT INTO pollen.departments (name, number) VALUES ('Deux Sèvres', '79');
-INSERT INTO pollen.departments (name, number) VALUES ('Somme', '80');
-INSERT INTO pollen.departments (name, number) VALUES ('Tarn', '81');
-INSERT INTO pollen.departments (name, number) VALUES ('Tarn et Garonne', '82');
-INSERT INTO pollen.departments (name, number) VALUES ('Var', '83');
-INSERT INTO pollen.departments (name, number) VALUES ('Vaucluse', '84');
-INSERT INTO pollen.departments (name, number) VALUES ('Vendée', '85');
-INSERT INTO pollen.departments (name, number) VALUES ('Vienne', '86');
-INSERT INTO pollen.departments (name, number) VALUES ('Haute Vienne', '87');
-INSERT INTO pollen.departments (name, number) VALUES ('Vosges', '88');
-INSERT INTO pollen.departments (name, number) VALUES ('Yonne', '89');
-INSERT INTO pollen.departments (name, number) VALUES ('Territoire de Belfort', '90');
-INSERT INTO pollen.departments (name, number) VALUES ('Essonne', '91');
-INSERT INTO pollen.departments (name, number) VALUES ('Hauts de Seine', '92');
-INSERT INTO pollen.departments (name, number) VALUES ('Seine Saint Denis', '93');
-INSERT INTO pollen.departments (name, number) VALUES ('Val de Marne', '94');
-INSERT INTO pollen.departments (name, number) VALUES ('Val d''Oise', '95');
-INSERT INTO pollen.departments (name, number) VALUES ('Andore', '99');
+INSERT INTO `departments` (`id`, `name`, `number`) VALUES
+  (1, 'Ain', '01'),
+  (2, 'Aisne', '02'),
+  (3, 'Allier', '03'),
+  (4, 'Alpes de Haute Provence', '04'),
+  (5, 'Hautes-Alpes', '05'),
+  (6, 'Alpes-Maritimes', '06'),
+  (7, 'Ardèches', '07'),
+  (8, 'Ardennes', '08'),
+  (9, 'Arièges', '09'),
+  (10, 'Aube', '10'),
+  (11, 'Aude', '11'),
+  (12, 'Aveyron', '12'),
+  (13, 'Bouche du Rhône', '13'),
+  (14, 'Calvados', '14'),
+  (15, 'Cantal', '15'),
+  (16, 'Charente', '16'),
+  (17, 'Charente Maritime', '17'),
+  (18, 'Cher', '18'),
+  (19, 'Corrèze', '19'),
+  (20, 'Corse', '20'),
+  (21, 'Côte d\'Or', '21'),
+  (22, 'Côte d\'Armor', '22'),
+  (23, 'Creuse', '23'),
+  (24, 'Dordogne', '24'),
+  (25, 'Doubs', '25'),
+  (26, 'Drôme', '26'),
+  (27, 'Eure', '27'),
+  (28, 'Eure et Loire', '28'),
+  (29, 'Finistère', '29'),
+  (30, 'Gard', '30'),
+  (31, 'Haute Garonne', '31'),
+  (32, 'Gers', '32'),
+  (33, 'Gironde', '33'),
+  (34, 'Hérault', '34'),
+  (35, 'Ille et Vilaine', '35'),
+  (36, 'Indre', '36'),
+  (37, 'Indre et Loire', '37'),
+  (38, 'Isère', '38'),
+  (39, 'Jura', '39'),
+  (40, 'Landes', '40'),
+  (41, 'Loir et Cher', '41'),
+  (42, 'Loire', '42'),
+  (43, 'Haute Loire', '43'),
+  (44, 'Loire Atlantique', '44'),
+  (45, 'Loiret', '45'),
+  (46, 'Lot', '46'),
+  (47, 'Lot et Garonne', '47'),
+  (48, 'Lozère', '48'),
+  (49, 'Maine et Loire', '49'),
+  (50, 'Manche', '50'),
+  (51, 'Marne', '51'),
+  (52, 'Haute Marne', '52'),
+  (53, 'Mayenne', '53'),
+  (54, 'Meurthe et Moselle', '54'),
+  (55, 'Meuse', '55'),
+  (56, 'Morbihan', '56'),
+  (57, 'Moselle', '57'),
+  (58, 'Nièvre', '58'),
+  (59, 'Nord', '59'),
+  (60, 'Oise', '60'),
+  (61, 'Orne', '61'),
+  (62, 'Pas de Calais', '62'),
+  (63, 'Puy de Dôme', '63'),
+  (64, 'Pyrénées Atlantiques', '64'),
+  (65, 'Haute Pyrénées', '65'),
+  (66, 'Pyrénées Orientales', '66'),
+  (67, 'Bas Rhin', '67'),
+  (68, 'Haut Rhin', '68'),
+  (69, 'Rhône', '69'),
+  (70, 'Haute Saône', '70'),
+  (71, 'Saône et Loire', '71'),
+  (72, 'Sarthe', '72'),
+  (73, 'Savoie', '73'),
+  (74, 'Haute Savoie', '74'),
+  (75, 'Paris', '75'),
+  (76, 'Seine Maritime', '76'),
+  (77, 'Seine et Marne', '77'),
+  (78, 'Yvelines', '78'),
+  (79, 'Deux Sèvres', '79'),
+  (80, 'Somme', '80'),
+  (81, 'Tarn', '81'),
+  (82, 'Tarn et Garonne', '82'),
+  (83, 'Var', '83'),
+  (84, 'Vaucluse', '84'),
+  (85, 'Vendée', '85'),
+  (86, 'Vienne', '86'),
+  (87, 'Haute Vienne', '87'),
+  (88, 'Vosges', '88'),
+  (89, 'Yonne', '89'),
+  (90, 'Territoire de Belfort', '90'),
+  (91, 'Essonne', '91'),
+  (92, 'Hauts de Seine', '92'),
+  (93, 'Seine Saint Denis', '93'),
+  (94, 'Val de Marne', '94'),
+  (95, 'Val d\'Oise', '95'),
+  (96, 'Andore', '99');
 
-INSERT INTO pollen.trees (name, number) VALUES ('Cupressacées', '01');
-INSERT INTO pollen.trees (name, number) VALUES ('Noisetier', '02');
-INSERT INTO pollen.trees (name, number) VALUES ('Aulne', '03');
-INSERT INTO pollen.trees (name, number) VALUES ('Peuplier', '04');
-INSERT INTO pollen.trees (name, number) VALUES ('Saule', '05');
-INSERT INTO pollen.trees (name, number) VALUES ('Frêne', '06');
-INSERT INTO pollen.trees (name, number) VALUES ('Charme', '07');
-INSERT INTO pollen.trees (name, number) VALUES ('Bouleau', '08');
-INSERT INTO pollen.trees (name, number) VALUES ('Platane', '09');
-INSERT INTO pollen.trees (name, number) VALUES ('Chêne', '10');
-INSERT INTO pollen.trees (name, number) VALUES ('Olivier', '11');
-INSERT INTO pollen.trees (name, number) VALUES ('Tilleul', '12');
-INSERT INTO pollen.trees (name, number) VALUES ('Châtaignier', '13');
-INSERT INTO pollen.trees (name, number) VALUES ('Rumex', '14');
-INSERT INTO pollen.trees (name, number) VALUES ('Graminées', '15');
-INSERT INTO pollen.trees (name, number) VALUES ('Plantain', '16');
-INSERT INTO pollen.trees (name, number) VALUES ('Urticacées', '17');
-INSERT INTO pollen.trees (name, number) VALUES ('Armoises', '18');
-INSERT INTO pollen.trees (name, number) VALUES ('Ambroises', '19');
+INSERT INTO `trees` (`id`, `name`, `number`) VALUES
+  (1, 'Cupressacées', '01'),
+  (2, 'Noisetier', '02'),
+  (3, 'Aulne', '03'),
+  (4, 'Peuplier', '04'),
+  (5, 'Saule', '05'),
+  (6, 'Frêne', '06'),
+  (7, 'Charme', '07'),
+  (8, 'Bouleau', '08'),
+  (9, 'Platane', '09'),
+  (10, 'Chêne', '10'),
+  (11, 'Olivier', '11'),
+  (12, 'Tilleul', '12'),
+  (13, 'Châtaignier', '13'),
+  (14, 'Rumex', '14'),
+  (15, 'Graminées', '15'),
+  (16, 'Plantain', '16'),
+  (17, 'Urticacées', '17'),
+  (18, 'Armoises', '18'),
+  (19, 'Ambroises', '19');
 
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (1, 1, 1);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (2, 1, 2);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (3, 1, 3);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (4, 1, 4);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (5, 1, 5);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (1, 1, 6);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (2, 1, 7);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (3, 1, 8);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (4, 1, 9);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (5, 1, 10);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (1, 1, 11);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (2, 1, 12);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (3, 1, 13);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (4, 1, 14);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (5, 1, 15);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (1, 1, 16);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (2, 1, 17);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (3, 1, 18);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (4, 1, 19);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (1, 2, 1);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (2, 2, 2);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (3, 2, 3);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (4, 2, 4);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (5, 2, 5);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (1, 2, 6);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (2, 2, 7);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (3, 2, 8);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (4, 2, 9);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (5, 2, 10);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (1, 2, 11);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (2, 2, 12);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (3, 2, 13);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (4, 2, 14);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (5, 2, 15);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (1, 2, 16);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (2, 2, 17);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (3, 2, 18);
-INSERT INTO pollen.risks (risk, department_id, tree_id) VALUES (4, 2, 19);
+INSERT INTO `risks` (`id`, `risk`, `department_id`, `tree_id`) VALUES
+  (1, 1, 1, 1),
+  (2, 2, 1, 2),
+  (3, 3, 1, 3),
+  (4, 4, 1, 4),
+  (5, 5, 1, 5),
+  (6, 1, 1, 6),
+  (7, 2, 1, 7),
+  (8, 3, 1, 8),
+  (9, 4, 1, 9),
+  (10, 5, 1, 10),
+  (11, 1, 1, 11),
+  (12, 2, 1, 12),
+  (13, 3, 1, 13),
+  (14, 4, 1, 14),
+  (15, 5, 1, 15),
+  (16, 1, 1, 16),
+  (17, 2, 1, 17),
+  (18, 3, 1, 18),
+  (19, 4, 1, 19),
+  (20, 1, 2, 1),
+  (21, 2, 2, 2),
+  (22, 3, 2, 3),
+  (23, 4, 2, 4),
+  (24, 5, 2, 5),
+  (25, 1, 2, 6),
+  (26, 2, 2, 7),
+  (27, 3, 2, 8),
+  (28, 4, 2, 9),
+  (29, 5, 2, 10),
+  (30, 1, 2, 11),
+  (31, 2, 2, 12),
+  (32, 3, 2, 13),
+  (33, 4, 2, 14),
+  (34, 5, 2, 15),
+  (35, 1, 2, 16),
+  (36, 2, 2, 17),
+  (37, 3, 2, 18),
+  (38, 4, 2, 19);
