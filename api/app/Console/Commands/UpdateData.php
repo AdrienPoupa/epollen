@@ -1,16 +1,39 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands;
 
 use App\Department;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class CronController extends Controller {
+class UpdateData extends Command
+{
     /**
-     * @return \Illuminate\Http\Response
-     * @param int
+     * The name and signature of the console command.
+     * @var string
      */
-    public function updateData() {
+    protected $signature = 'update:data';
+
+    /**
+     * The console command description.
+     * @var string
+     */
+    protected $description = 'Update data from pollens.fr';
+
+    /**
+     * Create a new command instance.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     * @return mixed
+     */
+    public function handle()
+    {
         $departments = Department::all();
         DB::table('risks')->truncate();
 
@@ -53,7 +76,7 @@ class CronController extends Controller {
                     [
                         'risk' => $pollens[$i]["risk"],
                         'department_id' => $department->id,
-                        'tree_id' => $i+1
+                        'tree_id' => $i + 1
                     ]
                 );
 

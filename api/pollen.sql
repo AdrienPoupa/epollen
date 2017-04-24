@@ -18,8 +18,8 @@ CREATE TABLE risks
     risk FLOAT NOT NULL,
     departments_id INT(11) NOT NULL,
     trees_id INT(11) NOT NULL,
-    CONSTRAINT risks_departments_id_fk FOREIGN KEY (departments_id) REFERENCES departments (id),
-    CONSTRAINT risks_trees_id_fk FOREIGN KEY (trees_id) REFERENCES trees (id)
+    CONSTRAINT risks_department_id_fk FOREIGN KEY (department_id) REFERENCES departments (id),
+    CONSTRAINT risks_tree_id_fk FOREIGN KEY (tree_id) REFERENCES trees (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE INDEX risks_departments_id_fk ON risks (departments_id);
