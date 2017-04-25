@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ePollen</string>
+    <string name="title_activity_maps">Current Place Details</string>
+    <string name="default_info_title">Localisation par défaut</string>
+    <string name="default_info_snippet">Impossible de vous localiser. Avez-vous autorisé la localisation ?</string>
+    <string name="title_activity_main2">ePollen</string>
+
+    <string name="navigation_drawer_open">Ouvrir menu</string>
+    <string name="navigation_drawer_close">Fermer menu</string>
+
+    <string name="action_settings">Paramètres</string>
+</resources>
