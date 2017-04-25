@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Department;
 use App\Http\Controllers\Controller;
 use App\Risk;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller {
     /**
      * Get all departments
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function getAll() {
         $header = array (
@@ -23,8 +24,7 @@ class DepartmentController extends Controller {
             $departmentJson = [];
 
             foreach ($departments as $department) {
-                //$risks = Risk::Where('department_id', $department->id)->get();
-                $risk = Risk::find(DB::table('risks')->max('risk'));
+                $risk = Risk::find(DB::table('risks')->max('risk')->where('department_id', $department->id));
 
                 array_push($departmentJson, [
                     'id' => $department->id,
@@ -81,7 +81,7 @@ class DepartmentController extends Controller {
     /**
      * Get one or several departments data
      * @param $department_id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function getDepartments($department_id) {
         $header = array (
