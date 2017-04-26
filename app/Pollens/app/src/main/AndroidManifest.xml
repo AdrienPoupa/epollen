@@ -28,7 +28,12 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".PollensDepartmentActivity"></activity>
+        <activity android:name=".PollensDepartmentActivity" />
+
+        <service
+            android:name=".UpdatePollensDataService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
