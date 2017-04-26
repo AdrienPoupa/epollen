@@ -1,11 +1,8 @@
 package pollens.poupa.beaujean.com.pollens;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -13,20 +10,20 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private HashMap hp;
-
     public DBHelper(Context context) {
         super(context, "departments" , null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE departments (id integer primary key, name text, number text, risk integer, color text);");
+        db.execSQL("CREATE TABLE departments (id INTEGER PRIMARY KEY, name TEXT, number TEXT, risk INTEGER, color TEXT);");
+        db.execSQL("CREATE TABLE risks (id INTEGER PRIMARY KEY, name TEXT, number TEXT, risk INTEGER);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS departments");
+        db.execSQL("DROP TABLE IF EXISTS risks");
         onCreate(db);
     }
 
@@ -41,16 +38,34 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public Cursor getDepartment(String id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("SELECT * FROM departments WHERE number = ?", new String[] { id });
-        return res;
+    public boolean insertRisk (String name, String number, int risk) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name", name);
+        contentValues.put("number", number);
+        contentValues.put("risk", risk);
+        db.insert("risks", null, contentValues);
+        return true;
     }
 
-    public int numberOfRows(){
+    public Cursor getDepartment(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, "departments");
-        return numRows;
+        return db.rawQuery("SELECT * FROM departments WHERE number = ?", new String[] { id });
+    }
+
+    public Cursor getRisk(String id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM risks WHERE number = ?", new String[] { id });
+    }
+
+    public int numberOfRowsDepartments(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        return (int) DatabaseUtils.queryNumEntries(db, "departments");
+    }
+
+    public int numberOfRowsRisks(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        return (int) DatabaseUtils.queryNumEntries(db, "risks");
     }
 
     public boolean updateDepartment (int id, String name, String number, int risk, String color) {
@@ -64,6 +79,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateRisk (int id, String name, String number, int risk) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name", name);
+        contentValues.put("number", number);
+        contentValues.put("risk", risk);
+        db.update("risks", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        return true;
+    }
+
     public Integer deleteDepartment(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete("departments",
@@ -71,13 +96,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
+    public Integer deleteRisk(Integer id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete("risks",
+                "id = ? ",
+                new String[] { Integer.toString(id) });
+    }
+
     /**
      * Delete all data in DB
-     * @return
+     * @return void
      */
-    public Integer delete() {
+    public void delete() {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("departments", null, null);
+        db.delete("departments", null, null);
+        db.delete("risks", null, null);
     }
 
     public ArrayList<String> getAllDepartments() {
@@ -86,9 +119,25 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "SELECT * FROM departments", null );
         res.moveToFirst();
+        res.close();
 
-        while(res.isAfterLast() == false){
+        while(!res.isAfterLast()){
             array_list.add(res.getString(res.getColumnIndex("name")));
+            res.moveToNext();
+        }
+        return array_list;
+    }
+
+    public ArrayList<String> getAllRisks() {
+        ArrayList<String> array_list = new ArrayList<String>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "SELECT * FROM risks", null );
+        res.moveToFirst();
+        res.close();
+
+        while(!res.isAfterLast()){
+            array_list.add(res.getString(res.getColumnIndex("number")));
             res.moveToNext();
         }
         return array_list;

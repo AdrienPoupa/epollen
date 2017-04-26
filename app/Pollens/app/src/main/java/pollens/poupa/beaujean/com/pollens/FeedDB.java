@@ -1,6 +1,7 @@
 package pollens.poupa.beaujean.com.pollens;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,6 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by Adrien on 25/04/2017.
  */
@@ -22,6 +27,8 @@ public class FeedDB {
     public FeedDB(Context context) {
         dbHelper = new DBHelper(context);
         dbHelper.getWritableDatabase();
+
+        final Context innerContext = context;
 
         RequestQueue mVolleyQueue = Volley.newRequestQueue(context.getApplicationContext());
         String url = "http://pollens.poupa.fr/api/department";
@@ -43,6 +50,13 @@ public class FeedDB {
 
                         dbHelper.insertDepartment(name, number, Integer.parseInt(risk), color);
                     }
+
+                    // Store last check
+                    SharedPreferences pref = innerContext.getApplicationContext().getSharedPreferences("lastcheck", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.remove("lastcheck");
+                    editor.putString("lastcheck", new Date().toString());
+                    editor.apply();
 
                 } catch (JSONException e) {
                     e.printStackTrace();

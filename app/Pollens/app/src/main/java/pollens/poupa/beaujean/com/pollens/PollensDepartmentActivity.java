@@ -94,7 +94,7 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
             yr.setDrawGridLines(false);
             yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-            setData(5, 50);
+            setData(5, 5);
             mChart.setFitBars(true);
             mChart.animateY(2500);
 
@@ -132,7 +132,7 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
             mChart.getData().notifyDataChanged();
             mChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(yVals1, "DataSet 1");
+            set1 = new BarDataSet(yVals1, "Pollens");
 
             int[] colorArray= { Color.rgb(220, 20, 60), Color.rgb(210, 105, 30), Color.rgb(65, 105, 225), Color.rgb(34, 139, 34),};
             set1.setColors(ColorTemplate.createColors(colorArray));
