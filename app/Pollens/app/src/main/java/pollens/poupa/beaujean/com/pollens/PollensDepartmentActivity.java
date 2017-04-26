@@ -1,8 +1,12 @@
 package pollens.poupa.beaujean.com.pollens;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -37,13 +41,64 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.geojson.GeoJsonFeature;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class PollensDepartmentActivity extends AppCompatActivity implements
         OnChartValueSelectedListener  {
 
     protected HorizontalBarChart mChart;
+
+    class LoadRisk extends AsyncTask<Void, Void, Void> {
+
+        ProgressDialog pd;
+        GeoJsonLayer layer;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(PollensDepartmentActivity.this);
+            pd.setMessage("Chargement des risques");
+            pd.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            try {
+                /*SharedPreferences pref = getApplicationContext().getSharedPreferences("lastcheck", android.content.Context.MODE_PRIVATE);
+                String lastCheck = pref.getString("lastcheck", null);
+
+                Calendar cal1 = Calendar.getInstance();
+                Calendar cal2 = Calendar.getInstance();
+                cal1.setTime(new Date());
+                cal2.setTime(new Date(lastCheck));
+                boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+
+                // Write to DB if data are older than 24 hours
+                if (!sameDay) {
+                    FeedDB feedDB = new FeedDB(getApplicationContext());
+                }*/
+
+            } catch (Exception e) {
+                Log.d("Error is : ", e.toString());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pd.cancel();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,58 +109,59 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         String department = intent.getStringExtra("department");
         String code = intent.getStringExtra("code");
 
+        new LoadRisk().execute();
+
         TextView headerText = (TextView)findViewById(R.id.headerText);
         headerText.setText("Résultats polliniques pour " + department + " " + code);
 
+        mChart = (HorizontalBarChart) findViewById(R.id.chart1);
+        mChart.setOnChartValueSelectedListener(this);
 
-            mChart = (HorizontalBarChart) findViewById(R.id.chart1);
-            mChart.setOnChartValueSelectedListener(this);
+        mChart.setDrawBarShadow(false);
 
-            mChart.setDrawBarShadow(false);
+        mChart.setDrawValueAboveBar(true);
 
-            mChart.setDrawValueAboveBar(true);
+        mChart.getDescription().setEnabled(false);
 
-            mChart.getDescription().setEnabled(false);
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        mChart.setMaxVisibleValueCount(60);
 
-            // if more than 60 entries are displayed in the chart, no values will be
-            // drawn
-            mChart.setMaxVisibleValueCount(60);
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
 
-            // scaling can now only be done on x- and y-axis separately
-            mChart.setPinchZoom(false);
+        mChart.setDrawGridBackground(false);
 
-            mChart.setDrawGridBackground(false);
+        XAxis xl = mChart.getXAxis();
+        xl.setPosition(XAxisPosition.BOTTOM);
+        xl.setDrawAxisLine(true);
+        xl.setDrawGridLines(false);
+        xl.setGranularity(10f);
 
-            XAxis xl = mChart.getXAxis();
-            xl.setPosition(XAxisPosition.BOTTOM);
-            xl.setDrawAxisLine(true);
-            xl.setDrawGridLines(false);
-            xl.setGranularity(10f);
+        YAxis yl = mChart.getAxisLeft();
+        //yl.setTypeface(mTfLight);
+        yl.setDrawAxisLine(true);
+        yl.setDrawGridLines(true);
+        yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-            YAxis yl = mChart.getAxisLeft();
-            //yl.setTypeface(mTfLight);
-            yl.setDrawAxisLine(true);
-            yl.setDrawGridLines(true);
-            yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        YAxis yr = mChart.getAxisRight();
+        //yr.setTypeface(mTfLight);
+        yr.setDrawAxisLine(true);
+        yr.setDrawGridLines(false);
+        yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-            YAxis yr = mChart.getAxisRight();
-            //yr.setTypeface(mTfLight);
-            yr.setDrawAxisLine(true);
-            yr.setDrawGridLines(false);
-            yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        setData(5, 5);
+        mChart.setFitBars(true);
+        mChart.animateY(2500);
 
-            setData(5, 5);
-            mChart.setFitBars(true);
-            mChart.animateY(2500);
-
-            Legend l = mChart.getLegend();
-            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-            l.setDrawInside(false);
-            l.setFormSize(8f);
-            l.setXEntrySpace(4f);
-        }
+        Legend l = mChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setFormSize(8f);
+        l.setXEntrySpace(4f);
+    }
 
     private void setData(int count, float range) {
 

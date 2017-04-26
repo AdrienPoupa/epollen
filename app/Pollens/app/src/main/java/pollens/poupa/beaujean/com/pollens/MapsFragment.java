@@ -325,6 +325,7 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
                         // Write to DB if data are older than 24 hours
                         if (!sameDay) {
                             FeedDB feedDB = new FeedDB(getContext());
+                            feedDB.loadDepartments();
                         }
 
                         layer = new GeoJsonLayer(mMap, R.raw.departements, getActivity().getApplicationContext());

@@ -24,11 +24,14 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FeedDB {
     DBHelper dbHelper;
-    public FeedDB(Context context) {
+    Context context;
+    public FeedDB(final Context context) {
         dbHelper = new DBHelper(context);
         dbHelper.getWritableDatabase();
+    }
 
-        final Context innerContext = context;
+    public void loadDepartments() {
+        this.context = context;
 
         RequestQueue mVolleyQueue = Volley.newRequestQueue(context.getApplicationContext());
         String url = "http://pollens.poupa.fr/api/department";
@@ -52,7 +55,7 @@ public class FeedDB {
                     }
 
                     // Store last check
-                    SharedPreferences pref = innerContext.getApplicationContext().getSharedPreferences("lastcheck", MODE_PRIVATE);
+                    SharedPreferences pref = context.getApplicationContext().getSharedPreferences("lastcheck", MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.remove("lastcheck");
                     editor.putString("lastcheck", new Date().toString());
