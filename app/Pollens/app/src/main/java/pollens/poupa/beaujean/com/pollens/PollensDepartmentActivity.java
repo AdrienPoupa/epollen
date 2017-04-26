@@ -49,16 +49,25 @@ import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class PollensDepartmentActivity extends AppCompatActivity implements
         OnChartValueSelectedListener  {
 
     protected HorizontalBarChart mChart;
 
-    class LoadRisk extends AsyncTask<Void, Void, Void> {
+    /**
+     * Inner class to load data
+     */
+    private class LoadRisk extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog pd;
-        GeoJsonLayer layer;
+        String number;
+
+        public LoadRisk(String code) {
+            super();
+            number = code;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -72,8 +81,8 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         protected Void doInBackground(Void... voids) {
 
             try {
-                /*SharedPreferences pref = getApplicationContext().getSharedPreferences("lastcheck", android.content.Context.MODE_PRIVATE);
-                String lastCheck = pref.getString("lastcheck", null);
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("lastcheck"+number, android.content.Context.MODE_PRIVATE);
+                String lastCheck = pref.getString("lastcheck"+number, null);
 
                 Calendar cal1 = Calendar.getInstance();
                 Calendar cal2 = Calendar.getInstance();
@@ -85,7 +94,8 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
                 // Write to DB if data are older than 24 hours
                 if (!sameDay) {
                     FeedDB feedDB = new FeedDB(getApplicationContext());
-                }*/
+                    feedDB.loadRisk(number);
+                }
 
             } catch (Exception e) {
                 Log.d("Error is : ", e.toString());
@@ -100,6 +110,26 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Custom BarDataSet to set color depending on value
+     */
+    public class MyBarDataSet extends BarDataSet {
+        public MyBarDataSet(List<BarEntry> yVals, String label) {
+            super(yVals, label);
+        }
+
+        @Override
+        public int getColor(int index) {
+            if(getEntryForIndex(index).getY() < 2) // less than 2 green
+                return mColors.get(0);
+            else if(getEntryForIndex(index).getY() < 4) // less than 4 orange
+                return mColors.get(1);
+            else // greater or equal than 4-5 red
+                return mColors.get(2);
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,10 +139,10 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         String department = intent.getStringExtra("department");
         String code = intent.getStringExtra("code");
 
-        new LoadRisk().execute();
+        new LoadRisk(department).execute();
 
         TextView headerText = (TextView)findViewById(R.id.headerText);
-        headerText.setText("Résultats polliniques pour " + department + " " + code);
+        headerText.setText(department + " " + code);
 
         mChart = (HorizontalBarChart) findViewById(R.id.chart1);
         mChart.setOnChartValueSelectedListener(this);
@@ -123,9 +153,8 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
 
         mChart.getDescription().setEnabled(false);
 
-        // if more than 60 entries are displayed in the chart, no values will be
-        // drawn
-        mChart.setMaxVisibleValueCount(60);
+        // 19 trees max
+        mChart.setMaxVisibleValueCount(19);
 
         // scaling can now only be done on x- and y-axis separately
         mChart.setPinchZoom(false);
@@ -150,7 +179,7 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         yr.setDrawGridLines(false);
         yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        setData(5, 5);
+        setData(5);
         mChart.setFitBars(true);
         mChart.animateY(2500);
 
@@ -163,35 +192,33 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         l.setXEntrySpace(4f);
     }
 
-    private void setData(int count, float range) {
-
-        // Couleurs:
-        // http://stackoverflow.com/questions/29888850/mpandroidchart-set-different-color-to-bar-in-a-bar-chart-based-on-y-axis-values
-        // https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/BarChartPositiveNegative.java
+    private void setData(int count) {
 
         float barWidth = 9f;
         float spaceForBar = 10f;
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
 
+        // todo: hashmap (associative array) name => value
+        // todo: display value for a name
+
         for (int i = 0; i < count; i++) {
-            float val = (float) (Math.random() * range);
-            yVals1.add(new BarEntry(i * spaceForBar, val,
+            yVals1.add(new BarEntry(i * spaceForBar, i,
                     getResources().getDrawable(R.drawable.star)));
         }
 
-        BarDataSet set1;
+        MyBarDataSet set1;
 
         if (mChart.getData() != null &&
                 mChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet)mChart.getData().getDataSetByIndex(0);
+            set1 = (MyBarDataSet)mChart.getData().getDataSetByIndex(0);
             set1.setValues(yVals1);
             mChart.getData().notifyDataChanged();
             mChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(yVals1, "Pollens");
+            set1 = new MyBarDataSet(yVals1, "Pollens");
 
-            int[] colorArray= { Color.rgb(220, 20, 60), Color.rgb(210, 105, 30), Color.rgb(65, 105, 225), Color.rgb(34, 139, 34),};
-            set1.setColors(ColorTemplate.createColors(colorArray));
+            int[] colorArray= { Color.GREEN, Color.YELLOW, Color.RED};
+            set1.setColors(colorArray);
 
             set1.setDrawIcons(false);
 

@@ -8,5 +8,9 @@
     <string name="navigation_drawer_open">Ouvrir menu</string>
     <string name="navigation_drawer_close">Fermer menu</string>
 
-    <string name="action_settings">Paramètres</string>
+    <string name="action_settings">A propos</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="contact_fragment">Vous pouvez nous contacter blabla</string>
+    <string name="about_text">blabla</string>
 </resources>

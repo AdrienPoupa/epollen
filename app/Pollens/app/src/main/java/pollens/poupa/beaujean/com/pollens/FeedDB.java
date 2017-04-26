@@ -26,13 +26,16 @@ public class FeedDB {
     DBHelper dbHelper;
     Context context;
     public FeedDB(final Context context) {
+        this.context = context;
         dbHelper = new DBHelper(context);
         dbHelper.getWritableDatabase();
     }
 
+    /**
+     * Load all departments
+     * Insert into SQLite
+     */
     public void loadDepartments() {
-        this.context = context;
-
         RequestQueue mVolleyQueue = Volley.newRequestQueue(context.getApplicationContext());
         String url = "http://pollens.poupa.fr/api/department";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -59,6 +62,52 @@ public class FeedDB {
                     SharedPreferences.Editor editor = pref.edit();
                     editor.remove("lastcheck");
                     editor.putString("lastcheck", new Date().toString());
+                    editor.apply();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        stringRequest.setShouldCache(false);
+        stringRequest.setTag("Volley");
+        mVolleyQueue.add(stringRequest);
+    }
+
+    /**
+     * Load the risks for a specified department
+     * @param number department ID
+     */
+    public void loadRisk(final String number) {
+        RequestQueue mVolleyQueue = Volley.newRequestQueue(context.getApplicationContext());
+        String url = "http://pollens.poupa.fr/api/department/"+number;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    dbHelper.delete();
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray departments = jsonObject.getJSONArray("risks");
+
+                    for (int i = 0; i < departments.length(); i++) {
+                        JSONObject row = departments.getJSONObject(i);
+
+                        String name = row.getString("name");
+                        int risk = row.getInt("risk");
+
+                        dbHelper.insertRisk(name, number, risk);
+                    }
+
+                    // Store last check
+                    SharedPreferences pref = context.getApplicationContext().getSharedPreferences("lastcheck"+number, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.remove("lastcheck"+number);
+                    editor.putString("lastcheck"+number, new Date().toString());
                     editor.apply();
 
                 } catch (JSONException e) {

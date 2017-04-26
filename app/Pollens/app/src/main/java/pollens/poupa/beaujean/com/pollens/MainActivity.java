@@ -2,6 +2,7 @@ package pollens.poupa.beaujean.com.pollens;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     MapsFragment fragment;
+    ContactFragment contactFragment;
     FragmentManager fragmentManager;
 
     @Override
@@ -71,7 +73,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -106,7 +109,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame2, fragment).commit();
+            contactFragment = new ContactFragment();
+            fragmentManager.beginTransaction().replace(R.id.content_frame2, contactFragment).commit();
 
         }
 
