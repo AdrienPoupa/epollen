@@ -2,33 +2,48 @@ package pollens.poupa.beaujean.com.pollens;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static android.content.Context.MODE_PRIVATE;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 /**
- * Created by Adrien on 25/04/2017.
+ * Populate database with data from our own API
+ * We use RequestFuture from Volley to get synchronous requests
  */
 
 public class FeedDB {
-    DBHelper dbHelper;
-    Context context;
+
+    private DBHelper dbHelper;
+    private Context context;
+    private SimpleDateFormat sdf;
+    private String today;
+    private SharedPreferences pref;
+
+    /**
+     * Load some date
+     * @param context contect
+     */
     public FeedDB(final Context context) {
         this.context = context;
         dbHelper = new DBHelper(context);
         dbHelper.getWritableDatabase();
+
+        sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.US);
+        today = sdf.format(new Date());
+        pref = context.getApplicationContext().getSharedPreferences("lastcheck", android.content.Context.MODE_PRIVATE);
     }
 
     /**
@@ -36,14 +51,19 @@ public class FeedDB {
      * Insert into SQLite
      */
     public void loadDepartments() {
-        RequestQueue mVolleyQueue = Volley.newRequestQueue(context.getApplicationContext());
-        String url = "http://pollens.poupa.fr/api/department";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+        String lastCheck = pref.getString("lastcheck", null);
+
+        if (lastCheck == null || !lastCheck.equals(today)) {
+            RequestQueue mVolleyQueue = Volley.newRequestQueue(context.getApplicationContext());
+            RequestFuture<JSONObject> future = RequestFuture.newFuture();
+            String url = "http://pollens.poupa.fr/api/department";
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, future, future);
+            mVolleyQueue.add(request);
+
+            try {
+                dbHelper.deleteDepartments();
+                JSONObject jsonObject = future.get();
                 try {
-                    dbHelper.delete();
-                    JSONObject jsonObject = new JSONObject(response);
                     JSONArray departments = jsonObject.getJSONArray("departments");
 
                     for (int i = 0; i < departments.length(); i++) {
@@ -57,26 +77,21 @@ public class FeedDB {
                         dbHelper.insertDepartment(name, number, Integer.parseInt(risk), color);
                     }
 
+                    dbHelper.close();
+
                     // Store last check
-                    SharedPreferences pref = context.getApplicationContext().getSharedPreferences("lastcheck", MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.remove("lastcheck");
-                    editor.putString("lastcheck", new Date().toString());
+                    editor.putString("lastcheck", today);
                     editor.apply();
-
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.i("Error", e.toString());
                 }
+
+            } catch (InterruptedException | ExecutionException e) {
+                Log.i("Error", e.toString());
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        stringRequest.setShouldCache(false);
-        stringRequest.setTag("Volley");
-        mVolleyQueue.add(stringRequest);
+        }
     }
 
     /**
@@ -84,14 +99,19 @@ public class FeedDB {
      * @param number department ID
      */
     public void loadRisk(final String number) {
-        RequestQueue mVolleyQueue = Volley.newRequestQueue(context.getApplicationContext());
-        String url = "http://pollens.poupa.fr/api/department/"+number;
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+        String lastCheck = pref.getString("lastcheck"+number, null);
+
+        if (lastCheck == null || !lastCheck.equals(today)) {
+            RequestQueue mVolleyQueue = Volley.newRequestQueue(context.getApplicationContext());
+            RequestFuture<JSONObject> future = RequestFuture.newFuture();
+            String url = "http://pollens.poupa.fr/api/department/"+number;
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, future, future);
+            mVolleyQueue.add(request);
+
+            try {
+                dbHelper.deleteRisk(number);
+                JSONObject jsonObject = future.get();
                 try {
-                    dbHelper.delete();
-                    JSONObject jsonObject = new JSONObject(response);
                     JSONArray departments = jsonObject.getJSONArray("risks");
 
                     for (int i = 0; i < departments.length(); i++) {
@@ -103,25 +123,20 @@ public class FeedDB {
                         dbHelper.insertRisk(name, number, risk);
                     }
 
+                    dbHelper.close();
+
                     // Store last check
-                    SharedPreferences pref = context.getApplicationContext().getSharedPreferences("lastcheck"+number, MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.remove("lastcheck"+number);
                     editor.putString("lastcheck"+number, new Date().toString());
                     editor.apply();
-
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.i("Error", e.toString());
                 }
+
+            } catch (InterruptedException | ExecutionException e) {
+                Log.i("Error", e.toString());
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        stringRequest.setShouldCache(false);
-        stringRequest.setTag("Volley");
-        mVolleyQueue.add(stringRequest);
+        }
     }
 }

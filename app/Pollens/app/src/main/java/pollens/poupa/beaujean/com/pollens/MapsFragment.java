@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -52,9 +51,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Calendar;
-import java.util.Date;
-
 
 public class MapsFragment extends Fragment implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     MapView mMapView;
@@ -68,7 +64,7 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
     // A default location (Paris, France) and default zoom to use when location permission is
     // not granted.
     private final LatLng mDefaultLocation = new LatLng(48.864716, 2.349014);
-    private static final int DEFAULT_ZOOM = 8;
+    private static final int DEFAULT_ZOOM = 5;
 
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
@@ -114,7 +110,7 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
 
                         String miniCp = postal.substring(0,2);
                         Toast.makeText(getActivity(),
-                                "Résultat: " + shortname + " (" + miniCp + ")",
+                                "Ville détectée: " + shortname + " (" + miniCp + ")",
                                 Toast.LENGTH_LONG).show();
 
                     } catch (JSONException e) {
@@ -216,6 +212,15 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
 
+        // Build the Play services client for use by the Fused Location Provider and the Places API.
+        // Use the addApi() method to request the Google Places API and the Fused Location Provider.
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+        mGoogleApiClient.connect();
+
         mMapView.getMapAsync(new OnMapReadyCallback() {
 
             /**
@@ -292,13 +297,13 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
                 });
 
                 // Load departments
-                new LoadMap().execute();
+                new MyAsyncTask().execute();
             }
 
-            class LoadMap extends AsyncTask<Void, Void, Void> {
+            class MyAsyncTask extends AsyncTask<Void, Void, Void> {
 
                 ProgressDialog pd;
-                GeoJsonLayer layer;
+                GeoJsonLayer geoJsonLayer;
 
                 @Override
                 protected void onPreExecute() {
@@ -312,25 +317,12 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
                 protected Void doInBackground(Void... voids) {
 
                     try {
-                        SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("lastcheck", android.content.Context.MODE_PRIVATE);
-                        String lastCheck = pref.getString("lastcheck", null);
+                        FeedDB feedDB = new FeedDB(getContext());
+                        feedDB.loadDepartments();
 
-                        Calendar cal1 = Calendar.getInstance();
-                        Calendar cal2 = Calendar.getInstance();
-                        cal1.setTime(new Date());
-                        cal2.setTime(new Date(lastCheck));
-                        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+                        geoJsonLayer = new GeoJsonLayer(mMap, R.raw.departements, getActivity().getApplicationContext());
 
-                        // Write to DB if data are older than 24 hours
-                        if (!sameDay) {
-                            FeedDB feedDB = new FeedDB(getContext());
-                            feedDB.loadDepartments();
-                        }
-
-                        layer = new GeoJsonLayer(mMap, R.raw.departements, getActivity().getApplicationContext());
-
-                        for (GeoJsonFeature feature : layer.getFeatures()) {
+                        for (GeoJsonFeature feature : geoJsonLayer.getFeatures()) {
                             GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
 
                             DBHelper dbHelper = new DBHelper(getActivity());
@@ -364,7 +356,6 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
                                     break;
                             }
 
-
                             style.setStrokeColor(Color.BLACK);
                             feature.setPolygonStyle(style);
                         }
@@ -379,10 +370,10 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
                     pd.cancel();
-                    layer.addLayerToMap();
+                    geoJsonLayer.addLayerToMap();
 
                     // Demonstrate receiving features via GeoJsonLayer clicks.
-                    layer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
+                    geoJsonLayer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
                         @Override
                         public void onFeatureClick(Feature feature) {
                             Intent intent = new Intent(getActivity(), PollensDepartmentActivity.class);

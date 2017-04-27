@@ -35,6 +35,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("risk", risk);
         contentValues.put("color", color);
         db.insert("departments", null, contentValues);
+        db.close();
         return true;
     }
 
@@ -45,6 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("number", number);
         contentValues.put("risk", risk);
         db.insert("risks", null, contentValues);
+        db.close();
         return true;
     }
 
@@ -76,6 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("risk", risk);
         contentValues.put("color", color);
         db.update("departments", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        db.close();
         return true;
     }
 
@@ -86,6 +89,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("number", number);
         contentValues.put("risk", risk);
         db.update("risks", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        db.close();
         return true;
     }
 
@@ -96,21 +100,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
-    public Integer deleteRisk(Integer id) {
+    public Integer deleteRisk(String number) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete("risks",
-                "id = ? ",
-                new String[] { Integer.toString(id) });
+                "number = ? ",
+                new String[] { number });
     }
 
     /**
      * Delete all data in DB
      * @return void
      */
-    public void delete() {
+    public void deleteDepartments() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("departments", null, null);
-        db.delete("risks", null, null);
+        db.close();
     }
 
     public ArrayList<String> getAllDepartments() {

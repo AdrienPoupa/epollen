@@ -49,7 +49,9 @@ import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PollensDepartmentActivity extends AppCompatActivity implements
         OnChartValueSelectedListener  {
@@ -80,26 +82,9 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         @Override
         protected Void doInBackground(Void... voids) {
 
-            try {
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("lastcheck"+number, android.content.Context.MODE_PRIVATE);
-                String lastCheck = pref.getString("lastcheck"+number, null);
+            FeedDB feedDB = new FeedDB(getApplicationContext());
+            feedDB.loadRisk(number);
 
-                Calendar cal1 = Calendar.getInstance();
-                Calendar cal2 = Calendar.getInstance();
-                cal1.setTime(new Date());
-                cal2.setTime(new Date(lastCheck));
-                boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-
-                // Write to DB if data are older than 24 hours
-                if (!sameDay) {
-                    FeedDB feedDB = new FeedDB(getApplicationContext());
-                    feedDB.loadRisk(number);
-                }
-
-            } catch (Exception e) {
-                Log.d("Error is : ", e.toString());
-            }
             return null;
         }
 
@@ -139,7 +124,26 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         String department = intent.getStringExtra("department");
         String code = intent.getStringExtra("code");
 
-        new LoadRisk(department).execute();
+        // Get data
+        new LoadRisk(code).execute();
+
+        // Load data from DB
+        // todo: move in thread
+        DBHelper dbHelper = new DBHelper(getApplicationContext());
+        Cursor cursor = dbHelper.getRisk(code);
+
+        // Map <Name, Risk>
+        Map<String, Integer> map = new HashMap<>();
+
+        if(cursor != null) {
+            while (cursor.moveToNext()) {
+                System.out.println("ligne: "+cursor.getString(0)+cursor.getString(1)+cursor.getString(2)+cursor.getString(3));
+                map.put(cursor.getString(1), cursor.getInt(3));
+            }
+            cursor.close();
+        }
+
+        System.out.println(map);
 
         TextView headerText = (TextView)findViewById(R.id.headerText);
         headerText.setText(department + " " + code);
