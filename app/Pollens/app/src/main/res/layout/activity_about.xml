@@ -7,8 +7,16 @@
     tools:context="pollens.poupa.beaujean.com.pollens.AboutActivity">
 
     <TextView
-        android:id="@+id/aboutTextView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/about_text" />
+        android:id="@+id/aboutContentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginLeft="0dp"
+        android:layout_marginStart="8dp"
+        android:padding="15dp"
+        android:text="@string/about_text_content"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_editor_absoluteY="1dp" />
+
 </android.support.constraint.ConstraintLayout>

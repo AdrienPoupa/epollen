@@ -11,6 +11,15 @@
     <string name="action_settings">A propos</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="contact_fragment">Vous pouvez nous contacter blabla</string>
-    <string name="about_text">blabla</string>
+    <string name="contact_fragment">"Si vous souhaitez obtenir des informations complémentaires ou souhaitez nous faire part de suggestions à propos de l'application, n'hésitez pas à nous contacter  à l'adresse contact@pollenize.me"</string>
+    <string name="about_text_title">"ePollen, l'application ultime pour lutter contre l'allergie"</string>
+    <string name="about_text_content">"ePollen est une application complète de surveillance des niveaux de pollen.
+
+Avant de mettre le nez dehors, avant un déplacement, ayez le réflexe de consulter ePollen afin d'adapter vos activités quotidiennes en fonction de vos allergies.
+
+En effet, ePollen vous permet de connaître de manière précise les risques d'allergies en vous détaillant ceux-ci en tenant compte du département où vous vous situez et des essences d'arbres ou de plantes auxquelles vous pourriez être sensible.
+
+
+"
+    </string>
 </resources>
