@@ -1,36 +1,32 @@
 package pollens.poupa.beaujean.com.pollens;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    MapsFragment fragment;
+    MapsFragment mapsFragment;
     ContactFragment contactFragment;
     FragmentManager fragmentManager;
+    ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fragment = new MapsFragment();
+        mapsFragment = new MapsFragment();
         fragmentManager = getFragmentManager();
 
         setContentView(R.layout.activity_main);
@@ -45,6 +41,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        fragmentManager.beginTransaction().replace(R.id.content_frame, mapsFragment).commit();
     }
 
     @Override
@@ -61,7 +59,22 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+        // Return true to display menu
         return true;
+    }
+
+    // Call to update the share intent
+    private void setShareIntent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     @Override
@@ -86,31 +99,27 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_pollens) {
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame2, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, mapsFragment).commit();
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_map) {
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame2, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, mapsFragment).commit();
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_settings) {
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame2, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, mapsFragment).commit();
 
-        } else if (id == R.id.nav_manage) {
+        } /*else if (id == R.id.nav_share) {
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame2, fragment).commit();
+            // todo: open share
+            fragmentManager.beginTransaction().replace(R.id.content_frame, mapsFragment).commit();
 
-        } else if (id == R.id.nav_share) {
-
-            fragmentManager.beginTransaction().replace(R.id.content_frame2, fragment).commit();
-
-        } else if (id == R.id.nav_send) {
+        } */else if (id == R.id.nav_send) {
 
             contactFragment = new ContactFragment();
-            fragmentManager.beginTransaction().replace(R.id.content_frame2, contactFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, contactFragment).commit();
 
         }
 
@@ -119,11 +128,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Used for the Maps Fragment to authorize location requests
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         if (requestCode == MapsFragment.MY_PERMISSIONS_REQUEST_LOCATION){
-            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            mapsFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
         else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);

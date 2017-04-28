@@ -60,7 +60,7 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
     protected HorizontalBarChart mChart;
     protected Cursor cursor;
     protected String department, code;
-    protected Map<String, Integer> map;
+    protected HashMap<Integer, HashMap<String, Integer>> map;
 
     /**
      * Inner class to load data
@@ -104,11 +104,17 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
             pd.cancel();
 
             // Map <Name, Risk>
-            map = new HashMap<>();
+            map = new HashMap<Integer, HashMap<String, Integer>>();
 
             if(cursor != null) {
+                int i = 0;
                 while (cursor.moveToNext()) {
-                    map.put(cursor.getString(1), cursor.getInt(3));
+                    if (cursor.getInt(3) != 0) {
+                        HashMap<String, Integer> nested = new HashMap<>();
+                        nested.put(cursor.getString(1), cursor.getInt(3));
+                        map.put(i, nested);
+                        i++;
+                    }
                 }
                 cursor.close();
             }
@@ -137,23 +143,70 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
 
             XAxis xl = mChart.getXAxis();
             xl.setPosition(XAxisPosition.BOTTOM);
-            xl.setDrawAxisLine(true);
+            xl.setDrawAxisLine(false);
             xl.setDrawGridLines(false);
-            xl.setGranularity(10f);
+            //xl.setGranularity(10f);
 
             YAxis yl = mChart.getAxisLeft();
             //yl.setTypeface(mTfLight);
             yl.setDrawAxisLine(true);
-            yl.setDrawGridLines(true);
+            yl.setDrawGridLines(false);
             yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-            YAxis yr = mChart.getAxisRight();
+            /*YAxis yr = mChart.getAxisRight();
             //yr.setTypeface(mTfLight);
             yr.setDrawAxisLine(true);
             yr.setDrawGridLines(false);
-            yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+            yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)*/
 
-            setData();
+            float spaceForBar = 10f;
+            ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+
+            for (int i = 0; i < map.size(); i++) {
+                HashMap<String, Integer> hmap = map.get(i);
+                Map.Entry<String, Integer> entry = hmap.entrySet().iterator().next();
+                String key = entry.getKey();
+                float value = entry.getValue();
+                yVals1.add(new BarEntry(value * spaceForBar, value,
+                        getResources().getDrawable(R.drawable.star)));
+            }
+
+            MyBarDataSet set1;
+
+            if (mChart.getData() != null &&
+                    mChart.getData().getDataSetCount() > 0) {
+                set1 = (MyBarDataSet)mChart.getData().getDataSetByIndex(0);
+                set1.setValues(yVals1);
+                mChart.getData().notifyDataChanged();
+                mChart.notifyDataSetChanged();
+            } else {
+                set1 = new MyBarDataSet(yVals1, "Pollens");
+
+                int[] colorArray= { Color.GREEN, Color.YELLOW, Color.RED};
+                set1.setColors(colorArray);
+
+                set1.setDrawIcons(false);
+
+                ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+                dataSets.add(set1);
+
+                BarData data = new BarData(dataSets);
+                data.setValueTextSize(10f);
+
+                IAxisValueFormatter formatter = new IAxisValueFormatter() {
+                    // todo: nom
+                    @Override
+                    public String getFormattedValue(float value, AxisBase axis) {
+                        return "Test";
+                    }
+                };
+
+                mChart.getXAxis().setValueFormatter(formatter);
+
+                mChart.setData(data);
+            }
+
+
             mChart.setFitBars(true);
             mChart.animateY(2500);
 
@@ -198,66 +251,6 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
 
         // Get data
         new LoadRisk(code, this).execute();
-    }
-
-    private void setData() {
-
-        float barWidth = 9f;
-        float spaceForBar = 10f;
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-        // todo: hashmap (associative array) name => value
-        // todo: display value for a name
-
-        for (int i = 0; i < map.size(); i++) {
-            yVals1.add(new BarEntry(i * spaceForBar, map.,
-                    getResources().getDrawable(R.drawable.star)));
-        }
-
-        // todo: int to float
-        /*Iterator it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            yVals1.add(new BarEntry((float) pair.getValue() * spaceForBar, (float) pair.getValue(),
-                    getResources().getDrawable(R.drawable.star)));
-            System.out.println(pair.getKey() + " = " + pair.getValue());
-            it.remove(); // avoids a ConcurrentModificationException
-        }*/
-
-        MyBarDataSet set1;
-
-        if (mChart.getData() != null &&
-                mChart.getData().getDataSetCount() > 0) {
-            set1 = (MyBarDataSet)mChart.getData().getDataSetByIndex(0);
-            set1.setValues(yVals1);
-            mChart.getData().notifyDataChanged();
-            mChart.notifyDataSetChanged();
-        } else {
-            set1 = new MyBarDataSet(yVals1, "Pollens");
-
-            int[] colorArray= { Color.GREEN, Color.YELLOW, Color.RED};
-            set1.setColors(colorArray);
-
-            set1.setDrawIcons(false);
-
-            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-            dataSets.add(set1);
-
-            BarData data = new BarData(dataSets);
-            data.setValueTextSize(10f);
-            data.setBarWidth(barWidth);
-
-            IAxisValueFormatter formatter = new IAxisValueFormatter() {
-                @Override
-                public String getFormattedValue(float value, AxisBase axis) {
-                    return "Test";
-                }
-            };
-
-            mChart.getXAxis().setValueFormatter(formatter);
-
-            mChart.setData(data);
-        }
     }
 
     protected RectF mOnValueSelectedRectF = new RectF();

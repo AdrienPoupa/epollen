@@ -77,8 +77,6 @@ public class FeedDB {
                         dbHelper.insertDepartment(name, number, Integer.parseInt(risk), color);
                     }
 
-                    dbHelper.close();
-
                     // Store last check
                     SharedPreferences.Editor editor = pref.edit();
                     editor.remove("lastcheck");
@@ -90,6 +88,8 @@ public class FeedDB {
 
             } catch (InterruptedException | ExecutionException e) {
                 Log.i("Error", e.toString());
+            } finally {
+                dbHelper.close();
             }
         }
     }
@@ -123,8 +123,6 @@ public class FeedDB {
                         dbHelper.insertRisk(name, number, risk);
                     }
 
-                    dbHelper.close();
-
                     // Store last check
                     SharedPreferences.Editor editor = pref.edit();
                     editor.remove("lastcheck"+number);
@@ -136,6 +134,8 @@ public class FeedDB {
 
             } catch (InterruptedException | ExecutionException e) {
                 Log.i("Error", e.toString());
+            } finally {
+                dbHelper.close();
             }
         }
     }

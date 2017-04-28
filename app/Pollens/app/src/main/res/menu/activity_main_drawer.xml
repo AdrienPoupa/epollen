@@ -1,36 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Carte" />
-        <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_map"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Carte" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Carte" />
+            android:id="@+id/nav_pollens"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Pollens" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Carte" />
+            android:title="Paramètres" />
+        <item
+            android:id="@+id/menu_item_share"
+            android:title="Partager"
+            app:actionProviderClass=
+                "android.support.v7.widget.ShareActionProvider"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/nav_send"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Remarques" />
     </group>
-
-    <item android:title="Carte">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Carte" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Carte" />
-        </menu>
-    </item>
-
 </menu>
