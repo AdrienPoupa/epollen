@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.nav_share){
-            System.out.println("Create the share Intent");
             // Create the share Intent
             String yourShareText = "Prévenez vos allergies ! http://epollen.fr";
             Intent shareIntent = ShareCompat.IntentBuilder.from(this).setType("text/plain").setText(yourShareText).getIntent();

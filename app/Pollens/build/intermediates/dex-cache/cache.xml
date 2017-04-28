@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\Adrien\AndroidStudioProjects\EFREI-S8-Mobile-Development-Project\app\Pollens\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        <dex dex="C:\Users\Adrien\AndroidStudioProjects\EFREI-S8-Mobile-Development-Project\app\Pollens\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_e85158407ac49af985319ac267d101caed5a08a6\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Adrien\AndroidStudioProjects\EFREI-S8-Mobile-Development-Project\app\Pollens\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="968d4c0ddeab77b476dc8b345419862e4e7bbc31">
+        <dex dex="C:\Users\Adrien\AndroidStudioProjects\EFREI-S8-Mobile-Development-Project\app\Pollens\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_931ba2046932b256682393f0329461ca76a2a336\classes.dex" />
+    </item>
+
+</items>

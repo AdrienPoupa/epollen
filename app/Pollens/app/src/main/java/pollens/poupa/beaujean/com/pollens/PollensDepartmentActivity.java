@@ -100,8 +100,6 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
                 cursor.close();
             }
 
-            System.out.println(map);
-
             TextView headerText = (TextView)findViewById(R.id.headerText);
             headerText.setText(department + " " + code);
 

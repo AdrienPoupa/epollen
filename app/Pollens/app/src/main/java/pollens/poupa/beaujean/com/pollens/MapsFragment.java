@@ -110,7 +110,7 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
 
                         String miniCp = postal.substring(0,2);
                         Toast.makeText(getActivity(),
-                                "Ville détectée: " + shortname + " (" + miniCp + ")",
+                                "Département détecté: " + shortname + " (" + miniCp + ")",
                                 Toast.LENGTH_LONG).show();
 
                     } catch (JSONException e) {
