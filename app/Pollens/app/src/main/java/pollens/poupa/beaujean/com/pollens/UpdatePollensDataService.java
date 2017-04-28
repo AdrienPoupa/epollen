@@ -22,7 +22,7 @@ public class UpdatePollensDataService extends IntentService {
 
     @Override
     public void onDestroy() {
-        // I want to restart this service again in one hour
+        //restart service after 24h
         AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarm.set(
                 alarm.RTC_WAKEUP,
