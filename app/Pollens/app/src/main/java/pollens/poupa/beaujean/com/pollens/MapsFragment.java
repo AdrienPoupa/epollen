@@ -317,7 +317,7 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
                 protected Void doInBackground(Void... voids) {
 
                     try {
-                        FeedDB feedDB = new FeedDB(getContext());
+                        FeedDB feedDB = new FeedDB(getActivity());
                         feedDB.loadDepartments();
 
                         geoJsonLayer = new GeoJsonLayer(mMap, R.raw.departements, getActivity().getApplicationContext());
@@ -325,9 +325,9 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
                         for (GeoJsonFeature feature : geoJsonLayer.getFeatures()) {
                             GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
 
-                            DBHelper dbHelper = new DBHelper(getActivity());
+                            DatabaseHelper databaseHelper = DatabaseHelper.getInstance(getActivity());
 
-                            Cursor cursor = dbHelper.getDepartment(feature.getProperty("code"));
+                            Cursor cursor = databaseHelper.getDepartment(feature.getProperty("code"));
 
                             String color = "white";
 

@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 public class FeedDB {
 
-    private DBHelper dbHelper;
+    private DatabaseHelper databaseHelper;
     private Context context;
     private SimpleDateFormat sdf;
     private String today;
@@ -38,8 +38,8 @@ public class FeedDB {
      */
     public FeedDB(final Context context) {
         this.context = context;
-        dbHelper = new DBHelper(context);
-        dbHelper.getWritableDatabase();
+        databaseHelper = DatabaseHelper.getInstance(context);
+        databaseHelper.getWritableDatabase();
 
         sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.US);
         today = sdf.format(new Date());
@@ -61,7 +61,7 @@ public class FeedDB {
             mVolleyQueue.add(request);
 
             try {
-                dbHelper.deleteDepartments();
+                databaseHelper.deleteDepartments();
                 JSONObject jsonObject = future.get();
                 try {
                     JSONArray departments = jsonObject.getJSONArray("departments");
@@ -74,7 +74,7 @@ public class FeedDB {
                         String risk = row.getString("risk");
                         String color = row.getString("color");
 
-                        dbHelper.insertDepartment(name, number, Integer.parseInt(risk), color);
+                        databaseHelper.insertDepartment(name, number, Integer.parseInt(risk), color);
                     }
 
                     // Store last check
@@ -89,7 +89,7 @@ public class FeedDB {
             } catch (InterruptedException | ExecutionException e) {
                 Log.i("Error", e.toString());
             } finally {
-                dbHelper.close();
+                databaseHelper.close();
             }
         }
     }
@@ -109,7 +109,7 @@ public class FeedDB {
             mVolleyQueue.add(request);
 
             try {
-                dbHelper.deleteRisk(number);
+                databaseHelper.deleteRisk(number);
                 JSONObject jsonObject = future.get();
                 try {
                     JSONArray departments = jsonObject.getJSONArray("risks");
@@ -120,7 +120,7 @@ public class FeedDB {
                         String name = row.getString("name");
                         int risk = row.getInt("risk");
 
-                        dbHelper.insertRisk(name, number, risk);
+                        databaseHelper.insertRisk(name, number, risk);
                     }
 
                     // Store last check
@@ -135,7 +135,7 @@ public class FeedDB {
             } catch (InterruptedException | ExecutionException e) {
                 Log.i("Error", e.toString());
             } finally {
-                dbHelper.close();
+                databaseHelper.close();
             }
         }
     }

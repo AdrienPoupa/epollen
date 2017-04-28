@@ -8,11 +8,29 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
-public class DBHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public DBHelper(Context context) {
+    private static DatabaseHelper mInstance = null;
+
+    public static DatabaseHelper getInstance(Context context) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (mInstance == null) {
+            mInstance = new DatabaseHelper(context);
+        }
+        return mInstance;
+    }
+
+    /**
+     * Constructor should be private to prevent direct instantiation.
+     * make call to static factory method "getInstance()" instead.
+     */
+    private DatabaseHelper(Context context) {
         super(context, "departments" , null, 1);
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -145,5 +163,11 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         return array_list;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        this.close();
+        super.finalize();
     }
 }

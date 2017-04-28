@@ -13,7 +13,7 @@ public class UpdatePollensDataService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        DBHelper dbHelper = new DBHelper(getApplicationContext());
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(getApplicationContext());
         FeedDB feedDB = new FeedDB(this);
     }
 
