@@ -33,7 +33,7 @@ class TreeController extends Controller {
                 array_push($departmentJson, [
                     'id' => $department->id,
                     'name' => $department->name,
-                    'number' => $department->number
+                    'number' => $department->code
                 ]);
             }
 
@@ -41,7 +41,7 @@ class TreeController extends Controller {
                 if(!is_array($riskJson)){
                     $riskJson = [
                         'name' => $risk->tree->name,
-                        'number' => $risk->tree->number,
+                        'number' => $risk->tree->code,
                         'risk' => 0
                     ];
                 }
@@ -57,7 +57,7 @@ class TreeController extends Controller {
                 'tree' => [
                     'id' => $tree->id,
                     'name' => $tree->name,
-                    'number' => $tree->number
+                    'number' => $tree->code
                 ],
                 'risk' => $riskJson
             ], 200, $header, JSON_UNESCAPED_UNICODE);
