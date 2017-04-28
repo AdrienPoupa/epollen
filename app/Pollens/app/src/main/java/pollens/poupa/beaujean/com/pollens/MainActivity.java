@@ -18,6 +18,8 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    AboutFragment aboutFragment;
+    AdviceFragment adviceFragment;
     MapsFragment mapsFragment;
     ContactFragment contactFragment;
     FragmentManager fragmentManager;
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, AboutActivity.class);
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
 
@@ -100,17 +102,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_pollens) {
+        if (id == R.id.nav_advice) {
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame, mapsFragment).commit();
+            adviceFragment = new AdviceFragment();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, adviceFragment).commit();
 
         } else if (id == R.id.nav_map) {
 
             fragmentManager.beginTransaction().replace(R.id.content_frame, mapsFragment).commit();
 
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_about) {
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame, mapsFragment).commit();
+            aboutFragment = new AboutFragment();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, aboutFragment).commit();
 
         } else if (id == R.id.nav_send) {
 

@@ -4,6 +4,8 @@ import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
  * Update Pollen Data as a Service
@@ -22,12 +24,17 @@ public class UpdatePollensDataService extends IntentService {
 
     @Override
     public void onDestroy() {
-        //restart service after 24h
-        AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarm.set(
-                alarm.RTC_WAKEUP,
-                System.currentTimeMillis() + (1000 * 60 * 60 * 24),
-                PendingIntent.getService(this, 0, new Intent(this, UpdatePollensDataService.class), 0)
-        );
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int syncFrequency = prefs.getInt("sync_frequency", -1);
+
+        if (syncFrequency != -1) {
+            // Restart service after the time selected
+            AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
+            alarm.set(
+                    AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + (1000 * 60 * syncFrequency),
+                    PendingIntent.getService(this, 0, new Intent(this, UpdatePollensDataService.class), 0)
+            );
+        }
     }
 }

@@ -7,13 +7,13 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Carte" />
         <item
-            android:id="@+id/nav_pollens"
+            android:id="@+id/nav_advice"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Pollens" />
+            android:title="Conseils" />
         <item
-            android:id="@+id/nav_settings"
+            android:id="@+id/nav_about"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Paramètres" />
+            android:title="A propos" />
         <item
             android:id="@+id/nav_send"
             android:icon="@drawable/ic_menu_send"

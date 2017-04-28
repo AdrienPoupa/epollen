@@ -1,100 +1,85 @@
 <resources>
-    <string name="app_name">ePollen</string>
-    <string name="default_info_title">Localisation par défaut</string>
-    <string name="default_info_snippet">Impossible de vous localiser. Avez-vous autorisé la localisation ?</string>
-    <string name="title_activity_main2">ePollen</string>
+  <string name="app_name">ePollen</string>
+  <string name="default_info_title">Localisation par défaut</string>
+  <string name="default_info_snippet">Impossible de vous localiser. Avez-vous autorisé la localisation ?</string>
+  <string name="title_activity_main2">ePollen</string>
 
-    <string name="navigation_drawer_open">Ouvrir menu</string>
-    <string name="navigation_drawer_close">Fermer menu</string>
+  <string name="navigation_drawer_open">Ouvrir menu</string>
+  <string name="navigation_drawer_close">Fermer menu</string>
 
-    <string name="action_settings">A propos</string>
+  <string name="action_settings">Paramètres</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="contact_fragment">"Si vous souhaitez obtenir des informations complémentaires ou souhaitez nous faire part de suggestions à propos de l'application, n'hésitez pas à nous contacter  à l'adresse contact@epollen.fr"</string>
-    <string name="about_text_title">"ePollen, l'application ultime pour lutter contre l'allergie"</string>
-    <string name="about_text_content">"ePollen est une application complète de surveillance des niveaux de pollen.
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="contact_fragment">"Si vous souhaitez obtenir des informations complémentaires ou souhaitez nous faire part de suggestions à propos de l\'application, n'hésitez pas à nous contacter à l\'adresse contact@epollen.fr"</string>
+  <string name="about_text_title">"ePollen, l\'application ultime pour lutter contre l\'allergie"</string>
+  <string name="about_text_content">"ePollen est une application complète de surveillance des niveaux de pollen.
 
 Avant de mettre le nez dehors, avant un déplacement, ayez le réflexe de consulter ePollen afin d'adapter vos activités quotidiennes en fonction de vos allergies.
 
 En effet, ePollen vous permet de connaître de manière précise les risques d'allergies en vous détaillant ceux-ci en tenant compte du département où vous vous situez et des essences d'arbres ou de plantes auxquelles vous pourriez être sensible.
 
+Les données de ePollen proviennent du RNSA. Le Réseau National de Surveillance Aérobiologique (R.N.S.A.) est une association loi de 1901, créée en 1996 pour poursuivre les travaux réalisés depuis 1985 par le Laboratoire d´Aérobiologie de l´Institut Pasteur à Paris.
 
+Ce réseau a pour objet principal l´étude du contenu de l´air en particules biologiques pouvant avoir une incidence sur le risque allergique pour la population. C´est à dire l´étude du contenu de l´air en pollens et en moisissures ainsi que du recueil des données cliniques associées.
+
+Les données figurants sur le site Internet peuvent faire l'objet d'invalidations ou modifications postérieures à leur diffusion sans information à ce sujet.
+
+Le RNSA fonctionne grâce à un Conseil d´Administration composé de cliniciens, d´analystes et de membres fonctionnels et d´un Conseil Scientifique composé de membres nommés par la Direction Générale de la Santé, l´Institut de Veille Sanitaire, le Conseil Supérieur d´Hygiène Publique, ainsi que des spécialistes en allergologie, en palynologie et en analyses biologiques.
 "
-    </string>
+  </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_settings">Settings</string>
+  <string name="advice_fragment">Pensez à aérer! 15min minimum si possible 2 fois par jour, en évitant les heures chaudes. Les acariens détestent le froid et les courants d\'air!\n
+Par ailleurs les allergènes peuvent se trouver dans les endroits suivants :
+\n\n
+Rideaux = poussière et acariens\n
+Evitez les rideaux sinon lavez-les régulièrement si possible à 60°C.
+\n\n
+Tapis et Moquette = poussière et acariens\n
+Evitez les moquettes et les tapis sinon passez régulièrement l\'aspirateur (avec un filtre spécial) et les shampouiner si vous en avez la possibilité.
+\n\n
+Lit = poussière et acariens\n
+Aérez votre lit le matin. Protégez votre literie avec une housse plastique anti-acariens. Lavez vos draps deux fois par mois à 60°C si possible.
+\n\n
+Cuisine et Salle de bain = moisissures\n
+Evitez de laisser des zones humides (fuites d\'eau par exemple) Débarrassez-vous des traces noires de moisissures entre les carreaux du carrelage. Ventilez votre salle de bain. Jetez les ordures et nettoyez la poubelle régulièrement pour éviter le développement des moisissures. Lavez-vous les cheveux après être sorti, le soir avant de vous coucher.
+\n\n
+Plantes = moisissures\n
+Evitez les plantes d\'intérieur car la moisissure prospère dans la terre des pots.
+\n\n
+Animaux = poils, salive allergènes\n
+Maintenir les animaux à distance. Evitez les animaux domestiques, en particulier les chats, sinon lavez-vous bien les mains après les avoir caressés (la salive sur leurs poils est très allergène)
+\n\n
+Jardin = pollens\n
+Evitez les activités extérieures lorsque la concentration de pollens est à son maximum. Evitez de tondre la pelouse pendant la saison pollinique. Diversifiez les plantations en évitant les espèces les plus allergisantes (thuyas, cyprès, bouleaux). Evitez de faire sécher votre linge à l\'extérieur qui pourrait devenir un nid à pollens!
+\n\n
+Voiture = pollens et poussière\n
+Fermez vos fenêtres pour éviter que les pollens n\'entrent dans votre voiture lors de vos déplacements. Passez l\'aspirateur régulièrement sur les sièges. Installez un filtre à pollen.
+\n\n
+Produits ménagers et Substances irritantes : Limitez votre exposition aux produits ménagers, aérosols, tabac. Préférez les produits d\'entretien naturels.</string>
 
-    <!-- Strings related to Settings -->
+  <string name="title_activity_settings">Paramètres</string>
 
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
+  <!-- Example settings for Data & Sync -->
+  <string name="pref_header_data_sync">Données et synchronisation</string>
 
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
+  <string name="pref_title_sync_frequency">Fréquence de synchronisation</string>
+  <string-array name="pref_sync_frequency_titles">
+    <item>15 minutes</item>
+    <item>30 minutes</item>
+    <item>1 heure</item>
+    <item>3 heures</item>
+    <item>6 heures</item>
+    <item>Jamais</item>
+  </string-array>
+  <string-array name="pref_sync_frequency_values">
+    <item>15</item>
+    <item>30</item>
+    <item>60</item>
+    <item>180</item>
+    <item>360</item>
+    <item>-1</item>
+  </string-array>
 
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
+  <string name="pref_title_system_sync_settings">Paramètres système de synchronisation</string>
 
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value" />
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
 </resources>

@@ -63,7 +63,7 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
 
     // A default location (Paris, France) and default zoom to use when location permission is
     // not granted.
-    private final LatLng mDefaultLocation = new LatLng(48.864716, 2.349014);
+    private final LatLng mDefaultLocation = new LatLng(46.6167, 1.85);
     private static final int DEFAULT_ZOOM = 5;
 
     // The geographical location where the device is currently located. That is, the last-known
@@ -144,6 +144,8 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
     }
 
+    // Build the Play services client for use by the Fused Location Provider and the Places API.
+    // Use the addApi() method to request the Google Places API and the Fused Location Provider.
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
@@ -211,15 +213,6 @@ public class MapsFragment extends Fragment implements LocationListener, GoogleAp
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
-
-        // Build the Play services client for use by the Fused Location Provider and the Places API.
-        // Use the addApi() method to request the Google Places API and the Fused Location Provider.
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
-        mGoogleApiClient.connect();
 
         mMapView.getMapAsync(new OnMapReadyCallback() {
 
