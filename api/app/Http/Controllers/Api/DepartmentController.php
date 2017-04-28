@@ -24,12 +24,12 @@ class DepartmentController extends Controller {
             $departmentJson = [];
 
             foreach ($departments as $department) {
-                $risk = Risk::find(DB::table('risks')->max('risk')->where('department_id', $department->id));
+                $risk = Risk::where('department_id', $department->id)->orderBy('risk', 'desc')->first();
 
                 array_push($departmentJson, [
                     'id' => $department->id,
                     'name' => $department->name,
-                    'number' => $department->number,
+                    'number' => $department->code,
                     'risk' => $risk->risk,
                     'color' => call_user_func(function() use ($risk) {
                         switch($risk->risk) {
@@ -102,7 +102,7 @@ class DepartmentController extends Controller {
                 array_push($departmentJson, [
                     'id' => $department->id,
                     'name' => $department->name,
-                    'number' => $department->number
+                    'number' => $department->code
                 ]);
             }
 
