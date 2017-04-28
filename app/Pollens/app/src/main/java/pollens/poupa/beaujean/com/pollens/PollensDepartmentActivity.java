@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,9 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         OnChartValueSelectedListener  {
 
     protected HorizontalBarChart mChart;
+    protected Cursor cursor;
+    protected String department, code;
+    protected Map<String, Integer> map;
 
     /**
      * Inner class to load data
@@ -65,10 +69,12 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
 
         ProgressDialog pd;
         String number;
+        PollensDepartmentActivity parent;
 
-        public LoadRisk(String code) {
+        public LoadRisk(String code, PollensDepartmentActivity pollensDepartmentActivity) {
             super();
             number = code;
+            parent = pollensDepartmentActivity;
         }
 
         @Override
@@ -85,6 +91,10 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
             FeedDB feedDB = new FeedDB(getApplicationContext());
             feedDB.loadRisk(number);
 
+            // Load data from DB
+            DBHelper dbHelper = new DBHelper(getApplicationContext());
+            cursor = dbHelper.getRisk(number);
+
             return null;
         }
 
@@ -92,6 +102,68 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             pd.cancel();
+
+            // Map <Name, Risk>
+            map = new HashMap<>();
+
+            if(cursor != null) {
+                while (cursor.moveToNext()) {
+                    map.put(cursor.getString(1), cursor.getInt(3));
+                }
+                cursor.close();
+            }
+
+            System.out.println(map);
+
+            TextView headerText = (TextView)findViewById(R.id.headerText);
+            headerText.setText(department + " " + code);
+
+            mChart = (HorizontalBarChart) findViewById(R.id.chart1);
+            mChart.setOnChartValueSelectedListener(parent);
+
+            mChart.setDrawBarShadow(false);
+
+            mChart.setDrawValueAboveBar(true);
+
+            mChart.getDescription().setEnabled(false);
+
+            // 19 trees max
+            mChart.setMaxVisibleValueCount(19);
+
+            // scaling can now only be done on x- and y-axis separately
+            mChart.setPinchZoom(false);
+
+            mChart.setDrawGridBackground(false);
+
+            XAxis xl = mChart.getXAxis();
+            xl.setPosition(XAxisPosition.BOTTOM);
+            xl.setDrawAxisLine(true);
+            xl.setDrawGridLines(false);
+            xl.setGranularity(10f);
+
+            YAxis yl = mChart.getAxisLeft();
+            //yl.setTypeface(mTfLight);
+            yl.setDrawAxisLine(true);
+            yl.setDrawGridLines(true);
+            yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+            YAxis yr = mChart.getAxisRight();
+            //yr.setTypeface(mTfLight);
+            yr.setDrawAxisLine(true);
+            yr.setDrawGridLines(false);
+            yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+            setData();
+            mChart.setFitBars(true);
+            mChart.animateY(2500);
+
+            Legend l = mChart.getLegend();
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+            l.setDrawInside(false);
+            l.setFormSize(8f);
+            l.setXEntrySpace(4f);
         }
     }
 
@@ -121,82 +193,14 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_pollens_department);
 
         Intent intent = getIntent();
-        String department = intent.getStringExtra("department");
-        String code = intent.getStringExtra("code");
+        department = intent.getStringExtra("department");
+        code = intent.getStringExtra("code");
 
         // Get data
-        new LoadRisk(code).execute();
-
-        // Load data from DB
-        // todo: move in thread
-        DBHelper dbHelper = new DBHelper(getApplicationContext());
-        Cursor cursor = dbHelper.getRisk(code);
-
-        // Map <Name, Risk>
-        Map<String, Integer> map = new HashMap<>();
-
-        if(cursor != null) {
-            while (cursor.moveToNext()) {
-                System.out.println("ligne: "+cursor.getString(0)+cursor.getString(1)+cursor.getString(2)+cursor.getString(3));
-                map.put(cursor.getString(1), cursor.getInt(3));
-            }
-            cursor.close();
-        }
-
-        System.out.println(map);
-
-        TextView headerText = (TextView)findViewById(R.id.headerText);
-        headerText.setText(department + " " + code);
-
-        mChart = (HorizontalBarChart) findViewById(R.id.chart1);
-        mChart.setOnChartValueSelectedListener(this);
-
-        mChart.setDrawBarShadow(false);
-
-        mChart.setDrawValueAboveBar(true);
-
-        mChart.getDescription().setEnabled(false);
-
-        // 19 trees max
-        mChart.setMaxVisibleValueCount(19);
-
-        // scaling can now only be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
-
-        mChart.setDrawGridBackground(false);
-
-        XAxis xl = mChart.getXAxis();
-        xl.setPosition(XAxisPosition.BOTTOM);
-        xl.setDrawAxisLine(true);
-        xl.setDrawGridLines(false);
-        xl.setGranularity(10f);
-
-        YAxis yl = mChart.getAxisLeft();
-        //yl.setTypeface(mTfLight);
-        yl.setDrawAxisLine(true);
-        yl.setDrawGridLines(true);
-        yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-
-        YAxis yr = mChart.getAxisRight();
-        //yr.setTypeface(mTfLight);
-        yr.setDrawAxisLine(true);
-        yr.setDrawGridLines(false);
-        yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-
-        setData(5);
-        mChart.setFitBars(true);
-        mChart.animateY(2500);
-
-        Legend l = mChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        l.setFormSize(8f);
-        l.setXEntrySpace(4f);
+        new LoadRisk(code, this).execute();
     }
 
-    private void setData(int count) {
+    private void setData() {
 
         float barWidth = 9f;
         float spaceForBar = 10f;
@@ -205,10 +209,20 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
         // todo: hashmap (associative array) name => value
         // todo: display value for a name
 
-        for (int i = 0; i < count; i++) {
-            yVals1.add(new BarEntry(i * spaceForBar, i,
+        for (int i = 0; i < map.size(); i++) {
+            yVals1.add(new BarEntry(i * spaceForBar, map.,
                     getResources().getDrawable(R.drawable.star)));
         }
+
+        // todo: int to float
+        /*Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            yVals1.add(new BarEntry((float) pair.getValue() * spaceForBar, (float) pair.getValue(),
+                    getResources().getDrawable(R.drawable.star)));
+            System.out.println(pair.getKey() + " = " + pair.getValue());
+            it.remove(); // avoids a ConcurrentModificationException
+        }*/
 
         MyBarDataSet set1;
 

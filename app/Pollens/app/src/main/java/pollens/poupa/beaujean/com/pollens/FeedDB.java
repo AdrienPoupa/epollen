@@ -128,7 +128,7 @@ public class FeedDB {
                     // Store last check
                     SharedPreferences.Editor editor = pref.edit();
                     editor.remove("lastcheck"+number);
-                    editor.putString("lastcheck"+number, new Date().toString());
+                    editor.putString("lastcheck"+number, today);
                     editor.apply();
                 } catch (JSONException e) {
                     Log.i("Error", e.toString());
