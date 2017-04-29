@@ -9,7 +9,6 @@
 
   <string name="action_settings">Paramètres</string>
 
-  <!-- TODO: Remove or change this placeholder text -->
   <string name="contact_fragment">"Si vous souhaitez obtenir des informations complémentaires ou souhaitez nous faire part de suggestions à propos de l\'application, n'hésitez pas à nous contacter à l\'adresse contact@epollen.fr"</string>
   <string name="about_text_title">"ePollen, l\'application ultime pour lutter contre l\'allergie"</string>
   <string name="about_text_content">"ePollen est une application complète de surveillance des niveaux de pollen.
@@ -81,5 +80,7 @@ Produits ménagers et Substances irritantes : Limitez votre exposition aux produ
   </string-array>
 
   <string name="pref_title_system_sync_settings">Paramètres système de synchronisation</string>
+  <string name="welcome_epollen">Bienvenue sur ePollen</string>
+  <string name="epollen">ePollen</string>
 
 </resources>
