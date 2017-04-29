@@ -3,4 +3,5 @@
 build/
 Pollens.iml
 app/build/
+app/Pollens/build/
 local.properties

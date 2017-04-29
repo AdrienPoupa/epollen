@@ -16,7 +16,6 @@ import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -102,106 +101,108 @@ public class PollensDepartmentActivity extends AppCompatActivity implements
             headerText.setText(department + " " + code);
 
             mChart = (HorizontalBarChart) findViewById(R.id.chart1);
-            mChart.setOnChartValueSelectedListener(parent);
 
-            mChart.setDrawBarShadow(false);
+            BarData data = new BarData();
 
-            mChart.setDrawValueAboveBar(true);
-
-            mChart.getDescription().setEnabled(false);
-
-            // 19 trees max
-            mChart.setMaxVisibleValueCount(19);
-
-            // scaling can now only be done on x- and y-axis separately
-            mChart.setPinchZoom(false);
-
-            mChart.setDrawGridBackground(false);
-
-            XAxis xl = mChart.getXAxis();
-            xl.setPosition(XAxisPosition.BOTTOM);
-            xl.setDrawAxisLine(false);
-            xl.setDrawGridLines(false);
-            //xl.setGranularity(10f);
-
-            YAxis yl = mChart.getAxisLeft();
-            //yl.setTypeface(mTfLight);
-            yl.setDrawAxisLine(true);
-            yl.setDrawGridLines(false);
-            yl.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-
-            /*YAxis yr = mChart.getAxisRight();
-            //yr.setTypeface(mTfLight);
-            yr.setDrawAxisLine(true);
-            yr.setDrawGridLines(false);
-            yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)*/
-
-            float spaceForBar = 10f;
-            ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+            ArrayList<BarEntry> valueSet1 = new ArrayList<>();
+            int dataCount=0;
+            ArrayList<String> labels = new ArrayList<>();
 
             for (int i = 0; i < map.size(); i++) {
                 HashMap<String, Integer> hmap = map.get(i);
-                Map.Entry<String, Integer> entry = hmap.entrySet().iterator().next();
-                String key = entry.getKey();
-                float value = entry.getValue();
-                yVals1.add(new BarEntry(value * spaceForBar, value,
-                        getResources().getDrawable(R.drawable.star)));
+                Map.Entry<String, Integer> mentry = hmap.entrySet().iterator().next();
+                String key = mentry.getKey();
+                float value = mentry.getValue();
+                BarEntry entry = new BarEntry(dataCount,value);
+                valueSet1.add(entry);
+                labels.add(key);
+                dataCount++;
             }
 
-            MyBarDataSet set1;
+            List<IBarDataSet> dataSets = new ArrayList<>();
+            BarDataSetColored bds1 = new BarDataSetColored(valueSet1, "pollens");
+            int[] colorArray= { Color.GREEN, Color.YELLOW, Color.RED };
+            bds1.setColors(colorArray);
+            String[] xAxisLabels = labels.toArray(new String[0]);
 
-            if (mChart.getData() != null &&
-                    mChart.getData().getDataSetCount() > 0) {
-                set1 = (MyBarDataSet)mChart.getData().getDataSetByIndex(0);
-                set1.setValues(yVals1);
-                mChart.getData().notifyDataChanged();
-                mChart.notifyDataSetChanged();
-            } else {
-                set1 = new MyBarDataSet(yVals1, "Pollens");
+            bds1.setStackLabels(xAxisLabels);
+            dataSets.add(bds1);
+            data.addDataSet(bds1);
+            data.setDrawValues(true);
+            data.setBarWidth(0.4f);
 
-                int[] colorArray= { Color.GREEN, Color.YELLOW, Color.RED};
-                set1.setColors(colorArray);
+            XAxis xaxis = mChart.getXAxis();
+            xaxis.setDrawGridLines(false);
+            xaxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+            xaxis.setGranularityEnabled(true);
+            xaxis.setGranularity(1);
+            xaxis.setDrawLabels(true);
+            xaxis.setCenterAxisLabels(true);
+            xaxis.setLabelCount(dataCount+1);
+            xaxis.setXOffset(140);
+            xaxis.setDrawAxisLine(false);
+            xaxis.setTextSize(12f);
+            xaxis.setTextColor(Color.DKGRAY);
 
-                set1.setDrawIcons(false);
+            /**
+             * Custom class to assign the name of the tree
+             */
+            class CategoryBarChartXaxisFormatter implements IAxisValueFormatter {
 
-                ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-                dataSets.add(set1);
+                private String[] mValues;
 
-                BarData data = new BarData(dataSets);
-                data.setValueTextSize(10f);
+                public CategoryBarChartXaxisFormatter(String[] values) {
+                    this.mValues = values;
+                }
 
-                IAxisValueFormatter formatter = new IAxisValueFormatter() {
-                    // todo: nom
-                    @Override
-                    public String getFormattedValue(float value, AxisBase axis) {
-                        return "Test";
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    // "value" represents the position of the label on the axis (x or y)
+                    int val = (int) value;
+                    String label;
+                    if (val >= 0 && val < mValues.length) {
+                        label = mValues[val];
                     }
-                };
+                    else {
+                        label = "";
+                    }
+                    return label;
+                }
 
-                mChart.getXAxis().setValueFormatter(formatter);
-
-                mChart.setData(data);
             }
 
+            CategoryBarChartXaxisFormatter xaxisFormatter = new CategoryBarChartXaxisFormatter(xAxisLabels);
+            xaxis.setValueFormatter(xaxisFormatter);
+
+            YAxis yAxisLeft = mChart.getAxisLeft();
+            yAxisLeft.setDrawGridLines(false);
+            yAxisLeft.setDrawAxisLine(false);
+            yAxisLeft.setEnabled(false);
+
+            YAxis yAxisRight = mChart.getAxisRight();
+            yAxisRight.setDrawGridLines(false);
+            yAxisRight.setDrawAxisLine(false);
+            yAxisRight.setEnabled(false);
+
+            Legend legend = mChart.getLegend();
+            legend.setEnabled(false);
 
             mChart.setFitBars(true);
-            mChart.animateY(2500);
-
-            Legend l = mChart.getLegend();
-            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-            l.setDrawInside(false);
-            l.setFormSize(8f);
-            l.setXEntrySpace(4f);
+            mChart.getLayoutParams().height=((dataCount+2)*100);
+            mChart.setPadding(0,50,0,0);
+            mChart.setData(data);
+            mChart.setDescription(null);
+            mChart.animateXY(1000, 1000);
+            mChart.setBackgroundColor(Color.LTGRAY);
+            mChart.invalidate();
         }
     }
 
     /**
      * Custom BarDataSet to set color depending on value
      */
-    public class MyBarDataSet extends BarDataSet {
-        public MyBarDataSet(List<BarEntry> yVals, String label) {
+    public class BarDataSetColored extends BarDataSet {
+        public BarDataSetColored(List<BarEntry> yVals, String label) {
             super(yVals, label);
         }
 
